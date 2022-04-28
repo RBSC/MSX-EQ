@@ -1,0 +1,17 @@
+--------------------------------------------------------------------------------
+MSX-EQ PSG Spectrolyzer Cartridge
+Copyright (c) 2021-2022 RBSC
+--------------------------------------------------------------------------------
+
+Partlist
+--------
+
+Part     Value           Device               Package      Library         Count
+--------------------------------------------------------------------------------
+C1..C6   100nF           C-EUC0805            C0805        rcl             6
+C7..C8   47uF 10v        CPOL-EUSMCB          SMC_B        rcl             2
+DA1..DA9   LEDs          2010BB               DIP-8                        9
+D1         PDL           EPM7128STC100        TSOP-100     IC              1
+R1..R37  1k              R-EU_R0805           R0805        resistor        37
+XP2      PIN-10          PLD10                             XP              1   
+MSXSLOT                  EDGE-CONNECTOR                    50-pin slot     1
