@@ -14,7 +14,7 @@ range) corresponds to one of 9 vertical LED indicators.
 
 All files of the MSX-EQ project are available in the RBSC's Github repository: 
 
- - https://github.com/orgs/RBSC/MSX-EQ
+ - https://github.com/RBSC/MSX-EQ
 
 
 Hardware
