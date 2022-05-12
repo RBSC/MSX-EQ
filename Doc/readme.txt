@@ -56,6 +56,10 @@ The Quartus Programmer software can be downloaded from here:
 
  - https://mirrors.pdp-11.ru/_msx/_carnivore2/quartus/
 
+IMPORTANT!
+If the LED assemblies with inverted polarity were used to assemble the cartridge, please use the "MSX_EQ_inv_led.pof" firmware
+instead of the standard one.
+
 
 Assembling notes
 ----------------
