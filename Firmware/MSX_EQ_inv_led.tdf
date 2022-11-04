@@ -1,0 +1,231 @@
+% MSX-EQ FIRMWARE %
+% (C) Pyhesty [RBSC] %
+% ver 10.03.22 %
+% inversed led %
+TITLE "MSX_EQ";
+-- Libs
+include "lpm_counter.inc";
+include "lpm_shiftreg.inc";
+
+%-----------------------------%
+SUBDESIGN MSX_EQ
+(              
+    gclk : INPUT;
+    addr[7..0] : INPUT;
+    data[7..0] : INPUT;
+    ioreq : INPUT;
+    wr    : INPUT;
+	led_plus[8..0]        : OUTPUT;
+    led_minus[2..0][7..0] : OUTPUT;
+    test_low : OUTPUT;
+
+)
+VARIABLE   
+	cnt_div     : lpm_counter  with (LPM_WIDTH = 16); -- 3.7MHz
+	spec[8..0]  : lpm_counter  with (LPM_WIDTH = 3, LPM_DIRECTION = "DOWN"); 
+	RegAddr[3..0]  : DFFE;
+	FreqA[6..2], FreqB[6..2], FreqC[6..2]   : DFFE;
+	 ValA[2..0],  ValB[2..0], ValC[2..0]    : DFFE;
+--  NODES
+    cnt_to_3[1..0] : NODE;
+	 Val_ch[2..0]   : NODE;
+-- Modules
+-- DFFE	
+-- Test and Led Signal
+
+BEGIN	
+	test_low = cnt_div.q[15];
+    cnt_to_3[] = cnt_div.q[15..14];
+	(spec[8..0], cnt_div).clock = gclk;
+	(RegAddr[], FreqA[], FreqB[], FreqC[], ValA[], ValB[], ValC[]).clk = gclk;
+    
+    RegAddr[] = data[3..0];
+    RegAddr[].ena = !wr&!ioreq&(addr[7..0]==H"A0");
+        
+    (FreqA[3..2], FreqB[3..2], FreqC[3..2]) = data[7..6];
+    (FreqA[6..4], FreqB[6..4], FreqC[6..4]) = data[2..0]#data[3];    
+    ( ValA[2..0],  ValB[2..0],  ValC[2..0]) = data[3..1];     
+    FreqA[3..2].ena = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"00");
+    FreqB[3..2].ena = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"02");
+    FreqC[3..2].ena = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"04");
+    FreqA[6..4].ena = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"01");
+    FreqB[6..4].ena = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"03");
+    FreqC[6..4].ena = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"05");
+    ValA[].ena      = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"08");
+    ValB[].ena      = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"09");
+    ValC[].ena      = !wr&!ioreq&(addr[7..0]==H"A1")&(RegAddr[]==H"0A");
+
+    spec[0].cnt_en = !spec[0].cout&cnt_div.cout; 
+	spec[1].cnt_en = (spec[1].q[]>0)&cnt_div.cout; -- (spec[7].q[]>0);           
+	spec[2].cnt_en = (spec[2].q[]>0)&cnt_div.cout; -- (spec[7].q[]>0);           
+	spec[3].cnt_en = (spec[3].q[]>0)&cnt_div.cout; -- (spec[7].q[]>0);           
+	spec[4].cnt_en = (spec[4].q[]>0)&cnt_div.cout; -- (spec[7].q[]>0);           
+	spec[5].cnt_en = (spec[5].q[]>0)&cnt_div.cout; -- (spec[7].q[]>0);           
+	spec[6].cnt_en = (spec[6].q[]>0)&cnt_div.cout; -- (spec[7].q[]>0);           
+    spec[7].cnt_en = (spec[7].q[]>0)&cnt_div.cout; -- (spec[7].q[]>0);           
+    spec[8].cnt_en = (spec[8].q[]>0)&cnt_div.cout; -- (spec[8].q[]>0); 
+                  
+    if !wr&!ioreq&(addr[7..0]==H"A1") then
+		if (RegAddr[]==H"00")#(RegAddr[]==H"01")#(RegAddr[]==H"08") then
+			Val_ch[] = ValA[];
+			spec[8].sload = (FreqA[6..2] <H"02");
+			spec[7].sload = (FreqA[6..2]>=H"02")&(FreqA[6..2] <H"03");			
+			spec[6].sload = (FreqA[6..2]>=H"03")&(FreqA[6..2] <H"05");			
+			spec[5].sload = (FreqA[6..2]>=H"05")&(FreqA[6..2] <H"07");			
+			spec[4].sload = (FreqA[6..2]>=H"07")&(FreqA[6..2] <H"0A");			
+			spec[3].sload = (FreqA[6..2]>=H"0A")&(FreqA[6..2] <H"0C");			
+			spec[2].sload = (FreqA[6..2]>=H"0C")&(FreqA[6..2] <H"0F");			
+			spec[1].sload = (FreqA[6..2]>=H"0F")&(FreqA[6..2] <H"18");			
+			spec[0].sload = (FreqA[6..2]>=H"18");
+		end if;
+		if (RegAddr[]==H"02")#(RegAddr[]==H"03")#(RegAddr[]==H"09") then
+			Val_ch[] = ValB[];
+			spec[8].sload = (FreqB[6..2] <H"02");
+			spec[7].sload = (FreqB[6..2]>=H"02")&(FreqB[6..2] <H"03");			
+			spec[6].sload = (FreqB[6..2]>=H"03")&(FreqB[6..2] <H"05");			
+			spec[5].sload = (FreqB[6..2]>=H"05")&(FreqB[6..2] <H"07");			
+			spec[4].sload = (FreqB[6..2]>=H"07")&(FreqB[6..2] <H"0A");			
+			spec[3].sload = (FreqB[6..2]>=H"0A")&(FreqB[6..2] <H"0D");			
+			spec[2].sload = (FreqB[6..2]>=H"0D")&(FreqB[6..2] <H"0F");			
+			spec[1].sload = (FreqB[6..2]>=H"0F")&(FreqB[6..2] <H"18");			
+			spec[0].sload = (FreqB[6..2]>=H"18");					
+		end if;
+		if (RegAddr[]==H"04")#(RegAddr[]==H"05")#(RegAddr[]==H"0A") then
+			Val_ch[] = ValC[];
+			spec[8].sload = (FreqC[6..2] <H"02");
+			spec[7].sload = (FreqC[6..2]>=H"02")&(FreqC[6..2] <H"03");			
+			spec[6].sload = (FreqC[6..2]>=H"03")&(FreqC[6..2] <H"05");			
+			spec[5].sload = (FreqC[6..2]>=H"05")&(FreqC[6..2] <H"07");			
+			spec[4].sload = (FreqC[6..2]>=H"07")&(FreqC[6..2] <H"0A");			
+			spec[3].sload = (FreqC[6..2]>=H"0A")&(FreqC[6..2] <H"0D");			
+			spec[2].sload = (FreqC[6..2]>=H"0D")&(FreqC[6..2] <H"0F");			
+			spec[1].sload = (FreqC[6..2]>=H"0F")&(FreqC[6..2] <H"18");			
+			spec[0].sload = (FreqC[6..2]>=H"18");				
+		end if;
+    end if;     
+    
+    spec[0].data[] = Val_ch[];   
+    spec[1].data[] = Val_ch[];
+    spec[2].data[] = Val_ch[];
+    spec[3].data[] = Val_ch[];
+    spec[4].data[] = Val_ch[];
+    spec[5].data[] = Val_ch[];
+    spec[6].data[] = Val_ch[];
+    spec[7].data[] = Val_ch[];
+    spec[8].data[] = Val_ch[];
+   
+    if cnt_to_3[] == H"00" then
+        led_plus[0] = GND;
+        led_plus[3] = GND;
+        led_plus[6] = GND;
+        led_plus[1] = VCC;
+        led_plus[2] = VCC;
+        led_plus[4] = VCC;
+        led_plus[5] = VCC;
+        led_plus[7] = VCC;
+        led_plus[8] = VCC;
+        
+		led_minus[0][0] = (spec[0].q[]>0);
+		led_minus[0][1] = (spec[0].q[]>0);
+		led_minus[0][2] = (spec[0].q[]>1);
+		led_minus[0][3] = (spec[0].q[]>2);
+		led_minus[0][4] = (spec[0].q[]>3);
+		led_minus[0][5] = (spec[0].q[]>4);
+		led_minus[0][6] = (spec[0].q[]>5);
+		led_minus[0][7] = (spec[0].q[]>6);
+		
+		led_minus[1][0] = (spec[3].q[]>0);
+		led_minus[1][1] = (spec[3].q[]>0);
+		led_minus[1][2] = (spec[3].q[]>1);
+		led_minus[1][3] = (spec[3].q[]>2);
+		led_minus[1][4] = (spec[3].q[]>3);
+		led_minus[1][5] = (spec[3].q[]>4);
+		led_minus[1][6] = (spec[3].q[]>5);
+		led_minus[1][7] = (spec[3].q[]>6);
+		
+		led_minus[2][0] = (spec[6].q[]>0);
+		led_minus[2][1] = (spec[6].q[]>0);
+		led_minus[2][2] = (spec[6].q[]>1);
+		led_minus[2][3] = (spec[6].q[]>2);
+		led_minus[2][4] = (spec[6].q[]>3);
+		led_minus[2][5] = (spec[6].q[]>4);
+		led_minus[2][6] = (spec[6].q[]>5);
+		led_minus[2][7] = (spec[6].q[]>6);			
+    end if;    
+    
+    if cnt_to_3[] == H"01" then
+        led_plus[1] = GND;
+        led_plus[4] = GND;
+        led_plus[7] = GND;   
+        led_plus[0] = VCC;
+        led_plus[2] = VCC;
+        led_plus[3] = VCC;
+        led_plus[5] = VCC;
+        led_plus[6] = VCC;
+        led_plus[8] = VCC;         
+		led_minus[0][0] = (spec[1].q[]>0);
+		led_minus[0][1] = (spec[1].q[]>0);
+		led_minus[0][2] = (spec[1].q[]>1);
+		led_minus[0][3] = (spec[1].q[]>2);
+		led_minus[0][4] = (spec[1].q[]>3);
+		led_minus[0][5] = (spec[1].q[]>4);
+		led_minus[0][6] = (spec[1].q[]>5);
+		led_minus[0][7] = (spec[1].q[]>6);
+		
+		led_minus[1][0] = (spec[4].q[]>0);
+		led_minus[1][1] = (spec[4].q[]>0);
+		led_minus[1][2] = (spec[4].q[]>1);
+		led_minus[1][3] = (spec[4].q[]>2);
+		led_minus[1][4] = (spec[4].q[]>3);
+		led_minus[1][5] = (spec[4].q[]>4);
+		led_minus[1][6] = (spec[4].q[]>5);
+		led_minus[1][7] = (spec[4].q[]>6);
+		
+		led_minus[2][0] = (spec[7].q[]>0);
+		led_minus[2][1] = (spec[7].q[]>0);
+		led_minus[2][2] = (spec[7].q[]>1);
+		led_minus[2][3] = (spec[7].q[]>2);
+		led_minus[2][4] = (spec[7].q[]>3);
+		led_minus[2][5] = (spec[7].q[]>4);
+		led_minus[2][6] = (spec[7].q[]>5);
+		led_minus[2][7] = (spec[7].q[]>6);						
+    end if;   
+    
+    if cnt_to_3[] == H"02" then
+        led_plus[2] = GND;
+        led_plus[5] = GND;
+        led_plus[8] = GND;    
+        led_plus[0] = VCC;
+        led_plus[1] = VCC;
+        led_plus[3] = VCC;
+        led_plus[4] = VCC;
+        led_plus[6] = VCC;
+        led_plus[7] = VCC;            
+		led_minus[0][0] = (spec[2].q[]>0);
+		led_minus[0][1] = (spec[2].q[]>0);
+		led_minus[0][2] = (spec[2].q[]>1);
+		led_minus[0][3] = (spec[2].q[]>2);
+		led_minus[0][4] = (spec[2].q[]>3);
+		led_minus[0][5] = (spec[2].q[]>4);
+		led_minus[0][6] = (spec[2].q[]>5);
+		led_minus[0][7] = (spec[2].q[]>6);
+		
+		led_minus[1][0] = (spec[5].q[]>0);
+		led_minus[1][1] = (spec[5].q[]>0);
+		led_minus[1][2] = (spec[5].q[]>1);
+		led_minus[1][3] = (spec[5].q[]>2);
+		led_minus[1][4] = (spec[5].q[]>3);
+		led_minus[1][5] = (spec[5].q[]>4);
+		led_minus[1][6] = (spec[5].q[]>5);
+		led_minus[1][7] = (spec[5].q[]>6);
+		
+		led_minus[2][0] = (spec[8].q[]>0);
+		led_minus[2][1] = (spec[8].q[]>0);
+		led_minus[2][2] = (spec[8].q[]>1);
+		led_minus[2][3] = (spec[8].q[]>2);
+		led_minus[2][4] = (spec[8].q[]>3);
+		led_minus[2][5] = (spec[8].q[]>4);
+		led_minus[2][6] = (spec[8].q[]>5);
+		led_minus[2][7] = (spec[8].q[]>6);										
+    end if;           
+End;
