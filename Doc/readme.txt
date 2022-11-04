@@ -120,7 +120,7 @@ If you would like to commercially produce this cartridge, please contact the adm
 Contact information
 -------------------
 
-The members of RBSC group Tnt23, Wierzbowsky, Pyhesty, Ptero, GreyWolf, SuperMax, VWarlock è DJS3000 can be contacted via the group's e-mail
+The members of RBSC group Tnt23, Wierzbowsky, Pyhesty, Ptero, GreyWolf, SuperMax, VWarlock and DJS3000 can be contacted via the group's e-mail
 address:
 
 info@rbsc.su
