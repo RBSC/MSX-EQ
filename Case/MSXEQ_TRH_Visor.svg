@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="600mm"
+   height="400mm"
+   viewBox="0 0 600 400"
+   version="1.1"
+   id="svg19"
+   sodipodi:docname="MSCEQ_Visor.svg"
+   inkscape:version="1.2-alpha1 (unknown)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview21"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.53842708"
+     inkscape:cx="113.29296"
+     inkscape:cy="612.89636"
+     inkscape:window-width="3840"
+     inkscape:window-height="2054"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs16" />
+  <g
+     inkscape:label="CORTE"
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:power="100"
+     inkscape:feed="10"
+     inkscape:engrave="0"
+     inkscape:highlight-color="#e13535">
+    <rect
+       style="fill:none;stroke:#ff0000;stroke-width:0.2"
+       id="rect283"
+       width="104"
+       height="31"
+       x="0.10000001"
+       y="0.1"
+       rx="3.0664062e-06"
+       ry="3.0664062e-06"
+       inkscape:power="50"
+       inkscape:feed="50"
+       inkscape:engrave="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:power="50"
+     inkscape:feed="50"
+     inkscape:engrave="2"
+     inkscape:label="CONTORNO" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:power="50"
+     inkscape:feed="50"
+     inkscape:engrave="1"
+     inkscape:label="PREENCHIMENTO"
+     inkscape:highlight-color="#818181" />
+</svg>
